@@ -1,9 +1,31 @@
 """
-    flask如何操作数据库 sqlite3
-    flask-sqlalchemy
+    1. flask如何操作数据库 sqlite3
+        flask-sqlalchemy
+    2. 创建表
+        Class Table(db.Model):
+            pass
+        ......
+        app.app_context():
+            db.create_all()
+    3. 数据库迁移
+        安装第三方包
+        pip install flask-migrate
+        导入
+        from flask_migrate import Migrate
+        创建migrate对象
+        migrate=Migrate(app,db)
+        初始化迁移
+        flask db init
+        创建迁移文件
+        flask db migrate -m "备注"
+        应用数据库迁移
+        flask db upgrade
 """
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, jsonify
+
+# 数据库迁移
+from flask_migrate import Migrate
 
 """
     将sqlite数据库和app对象连接起来
@@ -15,7 +37,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-
+# 将app和db连接起来
+migrate = Migrate(app, db)
 """
     创建一个User类对象
     其实就是数据库表
@@ -41,6 +64,17 @@ class User(db.Model):
 
     def __repr__(self):
         print(f"user_id:{self.user_id}, user_name:{self.user_name}, user_email:{self.user_email}")
+
+
+class Address(db.Model):
+    address_id = db.Column(db.Integer, primary_key=True)
+    address_name = db.Column(db.String(256), nullable=False)
+    address_city = db.Column(db.String(256), nullable=False)
+
+    def __init__(self, address_id, address_name, address_city):
+        self.address_id = address_id
+        self.address_name = address_name
+        self.address_city = address_city
 
 
 # 增加
