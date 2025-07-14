@@ -19,13 +19,11 @@ app.register_blueprint(
     blueprint=login_bp,
     url_prefix="/login_routes"
 )
-
 # 绑定获取随机数蓝图
 app.register_blueprint(
     blueprint=random_number_bp,
     url_prefix="/random_number_routes"
 )
-
 if __name__ == '__main__':
     app.debug = True
     app.run()
